@@ -72,23 +72,23 @@
       "type": "media",
       "multiple": false
     },
-    "contacts": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::contact.contact",
-      "mappedBy": "contacto_ids"
-    },
-    "chat": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::chat.chat",
-      "inversedBy": "created_chat_by"
-    },
     "message": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::message.message",
       "inversedBy": "usuario_id"
+    },
+    "chats": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::chat.chat",
+      "mappedBy": "created_chat_by"
+    },
+    "contacts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::contact.contact",
+      "mappedBy": "usuario_id"
     }
   }
 }

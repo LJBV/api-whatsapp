@@ -4,7 +4,8 @@
   "info": {
     "singularName": "chat",
     "pluralName": "chats",
-    "displayName": "Chat"
+    "displayName": "Chat",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -20,15 +21,21 @@
     },
     "created_chat_by": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "mappedBy": "chat"
+      "inversedBy": "chats"
     },
     "message": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::message.message",
       "inversedBy": "chat_id"
+    },
+    "contacts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::contact.contact",
+      "mappedBy": "chats"
     }
   }
 }

@@ -4,23 +4,24 @@
   "info": {
     "singularName": "contact",
     "pluralName": "contacts",
-    "displayName": "Contact"
+    "displayName": "Contact",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "usuario_ids": {
+    "usuario_id": {
       "type": "relation",
-      "relation": "manyToMany",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "contacts"
     },
-    "contacto_ids": {
+    "chats": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "plugin::users-permissions.user",
+      "target": "api::chat.chat",
       "inversedBy": "contacts"
     }
   }

@@ -368,6 +368,7 @@ export interface ApiChatChat extends Schema.CollectionType {
     singularName: 'chat';
     pluralName: 'chats';
     displayName: 'Chat';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -376,13 +377,18 @@ export interface ApiChatChat extends Schema.CollectionType {
     type: Attribute.Enumeration<['group', 'singles']>;
     created_chat_by: Attribute.Relation<
       'api::chat.chat',
-      'oneToMany',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
     message: Attribute.Relation<
       'api::chat.chat',
       'manyToOne',
       'api::message.message'
+    >;
+    contacts: Attribute.Relation<
+      'api::chat.chat',
+      'manyToMany',
+      'api::contact.contact'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -400,20 +406,21 @@ export interface ApiContactContact extends Schema.CollectionType {
     singularName: 'contact';
     pluralName: 'contacts';
     displayName: 'Contact';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    usuario_ids: Attribute.Relation<
+    usuario_id: Attribute.Relation<
       'api::contact.contact',
-      'manyToMany',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
-    contacto_ids: Attribute.Relation<
+    chats: Attribute.Relation<
       'api::contact.contact',
       'manyToMany',
-      'plugin::users-permissions.user'
+      'api::chat.chat'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
@@ -703,6 +710,53 @@ export interface PluginContentReleasesReleaseAction
   };
 }
 
+export interface PluginI18NLocale extends Schema.CollectionType {
+  collectionName: 'i18n_locale';
+  info: {
+    singularName: 'locale';
+    pluralName: 'locales';
+    collectionName: 'locales';
+    displayName: 'Locale';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    name: Attribute.String &
+      Attribute.SetMinMax<
+        {
+          min: 1;
+          max: 50;
+        },
+        number
+      >;
+    code: Attribute.String & Attribute.Unique;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'plugin::i18n.locale',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'plugin::i18n.locale',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUsersPermissionsPermission
   extends Schema.CollectionType {
   collectionName: 'up_permissions';
@@ -837,21 +891,21 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.role'
     >;
     image: Attribute.Media<'images'>;
-    contacts: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'manyToMany',
-      'api::contact.contact'
-    >;
-    chat: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'manyToOne',
-      'api::chat.chat'
-    >;
     message: Attribute.Relation<
       'plugin::users-permissions.user',
       'manyToOne',
       'api::message.message'
     >;
+    chats: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::chat.chat'
+    >;
+    contacts: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::contact.contact'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -862,53 +916,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface PluginI18NLocale extends Schema.CollectionType {
-  collectionName: 'i18n_locale';
-  info: {
-    singularName: 'locale';
-    pluralName: 'locales';
-    collectionName: 'locales';
-    displayName: 'Locale';
-    description: '';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  pluginOptions: {
-    'content-manager': {
-      visible: false;
-    };
-    'content-type-builder': {
-      visible: false;
-    };
-  };
-  attributes: {
-    name: Attribute.String &
-      Attribute.SetMinMax<
-        {
-          min: 1;
-          max: 50;
-        },
-        number
-      >;
-    code: Attribute.String & Attribute.Unique;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'plugin::i18n.locale',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'plugin::i18n.locale',
       'oneToOne',
       'admin::user'
     > &
@@ -933,10 +940,10 @@ declare module '@strapi/types' {
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
+      'plugin::i18n.locale': PluginI18NLocale;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'plugin::i18n.locale': PluginI18NLocale;
     }
   }
 }
