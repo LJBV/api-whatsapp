@@ -380,9 +380,9 @@ export interface ApiChatChat extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
-    message: Attribute.Relation<
+    messages: Attribute.Relation<
       'api::chat.chat',
-      'manyToOne',
+      'oneToMany',
       'api::message.message'
     >;
     contacts: Attribute.Relation<
@@ -422,6 +422,7 @@ export interface ApiContactContact extends Schema.CollectionType {
       'manyToMany',
       'api::chat.chat'
     >;
+    name: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -452,11 +453,6 @@ export interface ApiMessageMessage extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    chat_id: Attribute.Relation<
-      'api::message.message',
-      'oneToMany',
-      'api::chat.chat'
-    >;
     usuario_id: Attribute.Relation<
       'api::message.message',
       'oneToMany',
@@ -464,6 +460,11 @@ export interface ApiMessageMessage extends Schema.CollectionType {
     >;
     content: Attribute.Text;
     date: Attribute.DateTime;
+    chat_id: Attribute.Relation<
+      'api::message.message',
+      'manyToOne',
+      'api::chat.chat'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

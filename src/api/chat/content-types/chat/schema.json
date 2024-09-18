@@ -25,11 +25,11 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "chats"
     },
-    "message": {
+    "messages": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::message.message",
-      "inversedBy": "chat_id"
+      "mappedBy": "chat_id"
     },
     "contacts": {
       "type": "relation",

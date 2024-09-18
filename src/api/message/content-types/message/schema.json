@@ -12,12 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "chat_id": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::chat.chat",
-      "mappedBy": "message"
-    },
     "usuario_id": {
       "type": "relation",
       "relation": "oneToMany",
@@ -29,6 +23,12 @@
     },
     "date": {
       "type": "datetime"
+    },
+    "chat_id": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::chat.chat",
+      "inversedBy": "messages"
     }
   }
 }
